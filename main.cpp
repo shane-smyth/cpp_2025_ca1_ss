@@ -17,18 +17,43 @@ struct Movie {
 };
 
 void parse(string line, Movie &movie);
-void readCSV();
+void readCSV(vector<Movie> &movies);
+void displayMovies(const vector<Movie> &movies, string message = "All Movies");
 
 int main() {
-    readCSV();
+    vector<Movie > movies;
+    readCSV(movies);
+    displayMovies(movies);
+
     return 0;
+}
+
+
+
+void readCSV(vector<Movie> &movies) {
+    ifstream fin("IMDB-Movie-Data.csv");
+    if (fin) {
+        while (!fin.eof()) {
+            string line;
+            getline(fin, line);
+            Movie movie;
+            if (line.length() >0) {
+                parse(line, movie);
+                movies.push_back(movie);
+            }
+        }
+        fin.close();
+    }
+    else {
+        cout << "File could not be opened" << endl;
+    }
 }
 
 
 void parse(string line, Movie &movie) {
     /*
-    * I was getting terminate called after throwing an instance of 'std::out_of_range'
-  what():  stoi, becuase some revenue was too large for a normal int so i changed movie.revenue to a long long and used stoll
+    * I was getting "terminate called after throwing an instance of 'std::out_of_range'
+  what():  stoi", becuase some revenue was too large for a normal int so i changed movie.revenue to a long long and used stoll
   to convert it to a long interger
     https://en.cppreference.com/w/cpp/string/basic_string/stol
      */
@@ -47,27 +72,18 @@ void parse(string line, Movie &movie) {
     movie.revenue = stoll(temp);
 }
 
-void readCSV() {
-    ifstream fin("IMDB-Movie-Data.csv");
-    if (fin) {
-        while (!fin.eof()) {
-            string line;
-            getline(fin, line);
-            Movie movie;
-            if (line.length() >0) {
-                parse(line, movie);
-                cout << movie.title << endl;
-                cout << movie.genre << endl;
-                cout << movie.director << endl;
-                cout << movie.year << endl;
-                cout << movie.runtime << endl;
-                cout << movie.rating << endl;
-                cout << movie.revenue << endl;
-            }
-        }
-        fin.close();
-    }
-    else {
-        cout << "File could not be opened" << endl;
+
+void displayMovies(const vector<Movie> &movies, string message) {
+    cout << message << endl;
+    cout << "-----------------------------------------------------------------------------------------------------------" << endl;
+    for (const auto &movie : movies) {
+        cout
+        << "Title: " << movie.title
+        << " | Genre: " << movie.genre
+        << " | Director: " << movie.director
+        << " | Year: " << movie.year
+        << " | Rating: " << movie.rating
+        << " | Revenue: $" << movie.revenue
+        << endl;
     }
 }
