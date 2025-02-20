@@ -19,11 +19,26 @@ struct Movie {
 void parse(string line, Movie &movie);
 void readCSV(vector<Movie> &movies);
 void displayMovies(const vector<Movie> &movies, string message = "All Movies");
+int findMovieByTitle(const vector<Movie> &movies, const string &title);
+void displayMovieDetails(const vector<Movie> &movies, int index);
 
 int main() {
     vector<Movie > movies;
     readCSV(movies);
-    displayMovies(movies);
+    // displayMovies(movies);
+
+    string searchTitle = "";
+    cout << "Enter a movie title: ";
+    getline(cin, searchTitle);
+
+    int index = findMovieByTitle(movies, searchTitle);
+    if (index != -1) {
+        cout << "Movie was found" << endl;
+        displayMovieDetails(movies, index);
+    }
+    else {
+        cout << "No movie found" << endl;
+    }
 
     return 0;
 }
@@ -82,8 +97,33 @@ void displayMovies(const vector<Movie> &movies, string message) {
         << " | Genre: " << movie.genre
         << " | Director: " << movie.director
         << " | Year: " << movie.year
+        << " | Runtime: " << movie.runtime
         << " | Rating: " << movie.rating
         << " | Revenue: $" << movie.revenue
         << endl;
+    }
+}
+
+int findMovieByTitle(const vector<Movie> &movies, const string &title) {
+    for (int i = 0; i < movies.size(); i++) {
+        if (movies[i].title == title) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+void displayMovieDetails(const vector<Movie> &movies, int index) {
+    if (index >= 0 && index < movies.size()) {
+        const Movie &movie = movies[index];
+        cout << "----------------------------------------" << endl;
+        cout << "Title: " << movie.title << endl;
+        cout << "Genre: " << movie.genre << endl;
+        cout << "Director: " << movie.director << endl;
+        cout << "Year: " << movie.year << endl;
+        cout << "Runtime: " << movie.runtime << " minutes" << endl;
+        cout << "Rating: " << movie.rating << endl;
+        cout << "Revenue: $" << movie.revenue << endl;
+        cout << "----------------------------------------" << endl;
     }
 }
