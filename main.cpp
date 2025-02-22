@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <fstream>
+#include <map>
 #include <sstream>
 using namespace std;
 
@@ -21,23 +22,29 @@ void readCSV(vector<Movie> &movies);
 void displayMovies(const vector<Movie> &movies, string message = "All Movies");
 int findMovieByTitle(const vector<Movie> &movies, const string &title);
 void displayMovieDetails(const vector<Movie> &movies, int index);
+map<string, int> countOfGenres(const vector<Movie> &movies);
 
 int main() {
     vector<Movie > movies;
     readCSV(movies);
     // displayMovies(movies);
 
-    string searchTitle = "";
-    cout << "Enter a movie title: ";
-    getline(cin, searchTitle);
+    // string searchTitle = "";
+    // cout << "Enter a movie title: ";
+    // getline(cin, searchTitle);
+    //
+    // int index = findMovieByTitle(movies, searchTitle);
+    // if (index != -1) {
+    //     cout << "Movie was found" << endl;
+    //     displayMovieDetails(movies, index);
+    // }
+    // else {
+    //     cout << "No movie found" << endl;
+    // }
 
-    int index = findMovieByTitle(movies, searchTitle);
-    if (index != -1) {
-        cout << "Movie was found" << endl;
-        displayMovieDetails(movies, index);
-    }
-    else {
-        cout << "No movie found" << endl;
+    map<string, int> genreCounts = countOfGenres(movies);
+    for (const auto &genre : genreCounts) {
+        cout << "Genre: " << genre.first << " | Count: " << genre.second << endl;
     }
 
     return 0;
@@ -91,7 +98,7 @@ void parse(string line, Movie &movie) {
 void displayMovies(const vector<Movie> &movies, string message) {
     cout << message << endl;
     cout << "-----------------------------------------------------------------------------------------------------------" << endl;
-    for (const auto &movie : movies) {
+    for (const auto &movie : movies) { // https://www.geeksforgeeks.org/cpp-vector-of-structs/
         cout
         << "Title: " << movie.title
         << " | Genre: " << movie.genre
@@ -126,4 +133,16 @@ void displayMovieDetails(const vector<Movie> &movies, int index) {
         cout << "Revenue: $" << movie.revenue << endl;
         cout << "----------------------------------------" << endl;
     }
+}
+
+// https://www.geeksforgeeks.org/map-associative-containers-the-c-standard-template-library-stl/
+// https://www.w3schools.com/cpp/cpp_maps.asp
+map<string, int> countOfGenres(const vector<Movie> &movies) {
+    map<string, int> count;
+    for (const auto &movie : movies) {
+        string key;
+        key = movie.genre;
+        count[key]++;
+    }
+    return count;
 }
