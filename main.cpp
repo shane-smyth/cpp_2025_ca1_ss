@@ -23,6 +23,7 @@ void displayMovies(const vector<Movie> &movies, string message = "All Movies");
 int findMovieByTitle(const vector<Movie> &movies, const string &title);
 void displayMovieDetails(const vector<Movie> &movies, int index);
 map<string, int> countOfGenres(const vector<Movie> &movies);
+void getMoviesByGenre(vector<Movie> &movies, const string genre);
 
 int main() {
     vector<Movie > movies;
@@ -42,10 +43,15 @@ int main() {
     //     cout << "No movie found" << endl;
     // }
 
-    map<string, int> genreCounts = countOfGenres(movies);
-    for (const auto &genre : genreCounts) {
-        cout << "Genre: " << genre.first << " | Count: " << genre.second << endl;
-    }
+    // map<string, int> genreCounts = countOfGenres(movies);
+    // for (const auto &genre : genreCounts) {
+    //     cout << "Genre: " << genre.first << " | Count: " << genre.second << endl;
+    // }
+
+    cout << "Enter Movie Genre: ";
+    string selectedGenre;
+    cin >> selectedGenre;
+    getMoviesByGenre(movies, selectedGenre);
 
     return 0;
 }
@@ -145,4 +151,27 @@ map<string, int> countOfGenres(const vector<Movie> &movies) {
         count[key]++;
     }
     return count;
+}
+
+// https://www.geeksforgeeks.org/how-to-convert-std-string-to-lower-case-in-cpp/
+string toLowerCase(const string &str) {
+    string lowerStr = str;
+    transform(lowerStr.begin(), lowerStr.end(),lowerStr.begin(), ::tolower);
+    return lowerStr;
+}
+
+void getMoviesByGenre(vector<Movie> &movies, const string genre) {
+    vector<Movie> subset;
+    string genreLower = toLowerCase(genre);
+    for (const auto &movie : movies) {
+        string movieGenreLower = toLowerCase(movie.genre);
+        if (movieGenreLower == genreLower) {
+            subset.push_back(movie);
+        }
+    }
+    if (!subset.empty()) {
+        displayMovies(subset, "Displaying All " + genre);
+    } else {
+        cout << "No movies found for the genre: " << genre << endl;
+    }
 }
