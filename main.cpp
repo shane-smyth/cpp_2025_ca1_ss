@@ -24,6 +24,7 @@ int findMovieByTitle(const vector<Movie> &movies, const string &title);
 void displayMovieDetails(const vector<Movie> &movies, int index);
 map<string, int> countOfGenres(const vector<Movie> &movies);
 void getMoviesByGenre(vector<Movie> &movies, const string genre);
+tuple<int, Movie, Movie> runtimeStatics(const vector<Movie> &movies);
 
 int main() {
     vector<Movie > movies;
@@ -48,10 +49,16 @@ int main() {
     //     cout << "Genre: " << genre.first << " | Count: " << genre.second << endl;
     // }
 
-    cout << "Enter Movie Genre: ";
-    string selectedGenre;
-    cin >> selectedGenre;
-    getMoviesByGenre(movies, selectedGenre);
+    // cout << "Enter Movie Genre: ";
+    // string selectedGenre;
+    // cin >> selectedGenre;
+    // getMoviesByGenre(movies, selectedGenre);
+
+    // https://medium.com/@ryan_forrester_/tuples-in-c-complete-guide-516a53837e45
+    auto [avg, highest, lowest] = runtimeStatics(movies);
+    cout << "Average Runtime: " << avg << " minutes\n";
+    cout << "Longest Movie: " << highest.title << " (" << highest.runtime << " minutes)\n";
+    cout << "Shortest Movie: " << lowest.title << " (" << lowest.runtime << " minutes)\n";
 
     return 0;
 }
@@ -174,4 +181,28 @@ void getMoviesByGenre(vector<Movie> &movies, const string genre) {
     } else {
         cout << "No movies found for the genre: " << genre << endl;
     }
+}
+
+// https://www.geeksforgeeks.org/how-to-return-multiple-values-from-a-function-in-c-or-cpp/
+// https://www.geeksforgeeks.org/tuples-in-c/
+tuple<int, Movie, Movie> runtimeStatics(const vector<Movie> &movies) {
+    if (movies.empty()) {
+        return {0, Movie(), Movie()};
+    }
+
+    const Movie *lowestRun = &movies[0];
+    const Movie *highestRun = &movies[0];
+    int totalRun = 0;
+
+    for (const auto &movie : movies) {
+        totalRun += movie.runtime;
+        if (movie.runtime > highestRun->runtime) {
+            highestRun = &movie;
+        }
+        if (movie.runtime < lowestRun->runtime) {
+            lowestRun = &movie;
+        }
+    }
+    int averageRun = totalRun / movies.size();
+    return {averageRun, *highestRun, *lowestRun};
 }
