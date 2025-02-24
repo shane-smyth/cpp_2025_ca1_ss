@@ -25,6 +25,7 @@ void displayMovieDetails(const vector<Movie> &movies, int index);
 map<string, int> countOfGenres(const vector<Movie> &movies);
 void getMoviesByGenre(vector<Movie> &movies, const string genre);
 tuple<int, Movie, Movie> runtimeStatics(const vector<Movie> &movies);
+vector<Movie> moviesContaining(const vector<Movie> &movies, const string &str);
 
 int main() {
     vector<Movie > movies;
@@ -55,15 +56,19 @@ int main() {
     // getMoviesByGenre(movies, selectedGenre);
 
     // https://medium.com/@ryan_forrester_/tuples-in-c-complete-guide-516a53837e45
-    auto [avg, highest, lowest] = runtimeStatics(movies);
-    cout << "Average Runtime: " << avg << " minutes\n";
-    cout << "Longest Movie: " << highest.title << " (" << highest.runtime << " minutes)\n";
-    cout << "Shortest Movie: " << lowest.title << " (" << lowest.runtime << " minutes)\n";
+    // auto [avg, highest, lowest] = runtimeStatics(movies);
+    // cout << "Average Runtime: " << avg << " minutes\n";
+    // cout << "Longest Movie: " << highest.title << " (" << highest.runtime << " minutes)\n";
+    // cout << "Shortest Movie: " << lowest.title << " (" << lowest.runtime << " minutes)\n";
+
+    cout << "Enter a string: ";
+    string str;
+    getline(cin, str);
+    vector<Movie> filteredMovies = moviesContaining(movies, str);
+    displayMovies(filteredMovies, "Movies containing: " + str);
 
     return 0;
 }
-
-
 
 void readCSV(vector<Movie> &movies) {
     ifstream fin("IMDB-Movie-Data.csv");
@@ -205,4 +210,20 @@ tuple<int, Movie, Movie> runtimeStatics(const vector<Movie> &movies) {
     }
     int averageRun = totalRun / movies.size();
     return {averageRun, *highestRun, *lowestRun};
+}
+
+vector<Movie> moviesContaining(const vector<Movie> &movies, const string &str) {
+    vector<Movie> subset;
+    string searchStr = toLowerCase(str);
+
+    for (auto iter = movies.begin(); iter != movies.end(); ++iter) {
+        if (toLowerCase(iter->title).find(searchStr) != string::npos) {
+            subset.push_back(*iter);
+        }
+    }
+
+    if (subset.empty()) {
+        cout << "No movies found that contain: " << str << endl;
+    }
+    return subset;
 }
