@@ -26,6 +26,7 @@ map<string, int> countOfGenres(const vector<Movie> &movies);
 void getMoviesByGenre(vector<Movie> &movies, const string genre);
 tuple<int, Movie, Movie> runtimeStatics(const vector<Movie> &movies);
 vector<Movie> moviesContaining(const vector<Movie> &movies, const string &str);
+void sortRatingDesc(vector<Movie> &movies);
 
 int main() {
     vector<Movie > movies;
@@ -61,11 +62,13 @@ int main() {
     // cout << "Longest Movie: " << highest.title << " (" << highest.runtime << " minutes)\n";
     // cout << "Shortest Movie: " << lowest.title << " (" << lowest.runtime << " minutes)\n";
 
-    cout << "Enter a string: ";
-    string str;
-    getline(cin, str);
-    vector<Movie> filteredMovies = moviesContaining(movies, str);
-    displayMovies(filteredMovies, "Movies containing: " + str);
+    // cout << "Enter a string: ";
+    // string str;
+    // getline(cin, str);
+    // vector<Movie> filteredMovies = moviesContaining(movies, str);
+    // displayMovies(filteredMovies, "Movies containing: " + str);
+
+    sortRatingDesc(movies);
 
     return 0;
 }
@@ -226,4 +229,10 @@ vector<Movie> moviesContaining(const vector<Movie> &movies, const string &str) {
         cout << "No movies found that contain: " << str << endl;
     }
     return subset;
+}
+
+void sortRatingDesc(vector<Movie> &movies) {
+    auto func = [](Movie &a, Movie &b) -> bool {return a.rating > b.rating;};
+    sort(movies.begin(), movies.end(), func);
+    displayMovies(movies, "Movies in Descending order of Rating:");
 }
