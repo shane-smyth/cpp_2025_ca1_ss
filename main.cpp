@@ -118,17 +118,15 @@ void parse(string line, Movie &movie) {
 
 void displayMovies(const vector<Movie> &movies, string message) {
     cout << message << endl;
-    cout << "-----------------------------------------------------------------------------------------------------------" << endl;
     for (const auto &movie : movies) { // https://www.geeksforgeeks.org/cpp-vector-of-structs/
-        cout
-        << "Title: " << movie.title
-        << " | Genre: " << movie.genre
-        << " | Director: " << movie.director
-        << " | Year: " << movie.year
-        << " | Runtime: " << movie.runtime
-        << " | Rating: " << movie.rating
-        << " | Revenue: $" << movie.revenue
-        << endl;
+        cout << "----------------------------------------" << endl;
+        cout << "Title: " << movie.title << endl;
+        cout << "Genre: " << movie.genre << endl;
+        cout << "Director: " << movie.director << endl;
+        cout << "Year: " << movie.year << endl;
+        cout << "Runtime: " << movie.runtime << " minutes" << endl;
+        cout << "Rating: " << movie.rating << endl;
+        cout << "Revenue: $" << movie.revenue << endl;
     }
 }
 
