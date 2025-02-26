@@ -1,0 +1,3 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles/cpp_2025_ca1_ss.dir/main.cpp.obj: dyndep
+
