@@ -27,24 +27,25 @@ void getMoviesByGenre(vector<Movie> &movies, const string genre);
 tuple<int, Movie, Movie> runtimeStatics(const vector<Movie> &movies);
 vector<Movie> moviesContaining(const vector<Movie> &movies, const string &str);
 void sortRatingDesc(vector<Movie> &movies);
+void displayMenu(const vector<string> menu);
 
 int main() {
     vector<Movie > movies;
     readCSV(movies);
-    // displayMovies(movies);
-
-    // string searchTitle = "";
-    // cout << "Enter a movie title: ";
-    // getline(cin, searchTitle);
-    //
-    // int index = findMovieByTitle(movies, searchTitle);
-    // if (index != -1) {
-    //     cout << "Movie was found" << endl;
-    //     displayMovieDetails(movies, index);
-    // }
-    // else {
-    //     cout << "No movie found" << endl;
-    // }
+//     // displayMovies(movies);
+//
+// string searchTitle = "";
+// cout << "Enter a movie title: ";
+// getline(cin, searchTitle);
+//
+// int index = findMovieByTitle(movies, searchTitle);
+// if (index != -1) {
+//     cout << "Movie was found" << endl;
+//     displayMovieDetails(movies, index);
+// }
+// else {
+//     cout << "No movie found" << endl;
+// }
 
     // map<string, int> genreCounts = countOfGenres(movies);
     // for (const auto &genre : genreCounts) {
@@ -61,14 +62,89 @@ int main() {
     // cout << "Average Runtime: " << avg << " minutes\n";
     // cout << "Longest Movie: " << highest.title << " (" << highest.runtime << " minutes)\n";
     // cout << "Shortest Movie: " << lowest.title << " (" << lowest.runtime << " minutes)\n";
-
+    //
     // cout << "Enter a string: ";
     // string str;
     // getline(cin, str);
     // vector<Movie> filteredMovies = moviesContaining(movies, str);
     // displayMovies(filteredMovies, "Movies containing: " + str);
 
-    sortRatingDesc(movies);
+    // sortRatingDesc(movies);
+
+    const vector<string> menuOptions = {
+        "1. Display All Movies.",
+        "2. Search For Movie (by title).",
+        "3. Display Genres and Their Count.",
+        "4. Get Movies By Genre.",
+        "5. Get Runtime Statics.",
+        "6. Search if Movie Contains something in Title.",
+        "7. Display Movies by Rating (descending order).",
+        "0. Exit",
+    };
+
+    int choice = -1;
+    do {
+        displayMenu(menuOptions);
+        cout << "\nPlease enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                {displayMovies(movies);}
+                break;
+            case 2: {
+                string searchTitle = "";
+                cout << "Enter a movie title: ";
+                getline(cin, searchTitle);
+
+                int index = findMovieByTitle(movies, searchTitle);
+                if (index != -1) {
+                    cout << "Movie was found" << endl;
+                    displayMovieDetails(movies, index);
+                }
+                else {
+                    cout << "No movie found" << endl;
+                }
+            }
+                break;
+            case 3: {
+                map<string, int> genreCounts = countOfGenres(movies);
+                for (const auto &genre : genreCounts) {
+                    cout << "Genre: " << genre.first << " | Count: " << genre.second << endl;
+                }
+            }
+                break;
+            case 4: {
+                cout << "Enter Movie Genre: ";
+                string selectedGenre;
+                cin >> selectedGenre;
+                getMoviesByGenre(movies, selectedGenre);
+            }
+                break;
+            case 5: {
+                // https://medium.com/@ryan_forrester_/tuples-in-c-complete-guide-516a53837e45
+                auto [avg, highest, lowest] = runtimeStatics(movies);
+                cout << "Average Runtime: " << avg << " minutes\n";
+                cout << "Longest Movie: " << highest.title << " (" << highest.runtime << " minutes)\n";
+                cout << "Shortest Movie: " << lowest.title << " (" << lowest.runtime << " minutes)\n";
+            }
+                break;
+            case 6: {
+                cout << "Enter a string: ";
+                string str;
+                getline(cin, str);
+                vector<Movie> filteredMovies = moviesContaining(movies, str);
+                displayMovies(filteredMovies, "Movies containing: " + str);
+            }
+                break;
+            case 7:
+                {sortRatingDesc(movies);}
+                break;
+            default:
+                cout << "\nInvalid Choice. Please try again." << endl;
+                break;
+        }
+    } while (choice != 0);
 
     return 0;
 }
@@ -233,4 +309,10 @@ void sortRatingDesc(vector<Movie> &movies) {
     auto func = [](Movie &a, Movie &b) -> bool {return a.rating > b.rating;};
     sort(movies.begin(), movies.end(), func);
     displayMovies(movies, "Movies in Descending order of Rating:");
+}
+
+void displayMenu(const vector<string> menu) {
+    for (auto &item : menu) {
+        cout << item << endl;
+    }
 }
